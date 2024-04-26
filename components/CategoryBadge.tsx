@@ -19,8 +19,8 @@ const CategoryBadge = ({
    return (
       <Animated.View
          entering={
-            FadeInRight.delay(index * 300)
-               .duration(1000)
+            FadeInRight.delay(index * 50)
+               .duration(400)
                .damping(0.5) // damping tells how quickly animation will slow down
          }>
          <Pressable

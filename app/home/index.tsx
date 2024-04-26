@@ -25,13 +25,18 @@ const HomeScreen = () => {
    const [page, setPage] = useState(1);
    const debouncedValue = useDebounce(searchText, 600);
 
-   const fetchData = async (page: number, append: boolean = false, query: string = "") => {
+   const fetchData = async (
+      page: number,
+      append: boolean = false,
+      query: string = "",
+      category: string = ""
+   ) => {
       const response = await fetchImages({
-         category: selectedCategory,
+         category: category,
          searchQuery: query,
          order: "popular",
          perPage: 25,
-         page: 1,
+         page: page,
          append: true,
       });
       if (response?.success && response?.data.hits) {
@@ -43,30 +48,34 @@ const HomeScreen = () => {
       }
    };
 
-   const handleSearch = () => {
+   const clearSearch = () => {
+      setSearchText("");
+   };
+
+   const handleSelectCategory = (category: string) => {
+      clearSearch();
+      setSlelectedCategory(category);
+      setImages([]);
+      setPage(1);
+      if (category.length !== 0) {
+         fetchData(1, false, "", category);
+      }
+   };
+
+   useEffect(() => {
       if (debouncedValue.length > 2) {
          setPage(1);
          setImages([]);
+         setSlelectedCategory("");
          fetchData(page, false, debouncedValue);
       }
       if (debouncedValue.length === 0) {
          setPage(1);
          setImages([]);
+         setSlelectedCategory("");
          fetchData(page, false);
       }
-   };
-
-   const handleSelectCategory = (category: string) => {
-      setSlelectedCategory(category);
-   };
-
-   const clearSearch = () => {
-      setSearchText("");
-   };
-
-   useEffect(() => {
-      fetchData(1, false);
-   }, []);
+   }, [debouncedValue]);
 
    const { top } = useSafeAreaInsets();
    const paddingTop = top > 0 ? top + 20 : 0;
@@ -89,8 +98,8 @@ const HomeScreen = () => {
                   onChangeText={setSearchText}
                   placeholder="Search..."
                   placeholderTextColor="#9fb9d0"
-                  onSubmitEditing={handleSearch}
-                  returnKeyType="search"
+                  // onSubmitEditing={handleSearch}
+                  // returnKeyType="search"
                   autoCorrect={true}
                />
                {searchText ? (

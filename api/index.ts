@@ -19,7 +19,7 @@ export const fetchImages = async ({
    try {
       const queryParam = searchQuery ? `&q=${encodeURIComponent(searchQuery)}` : "";
       const response = await fetch(
-         `https://pixabay.com/api/?key=${PIXABAY_API_KEY}${queryParam}&page=${page}&order=${order}&per_page=${perPage}&safesearch=true`
+         `https://pixabay.com/api/?key=${PIXABAY_API_KEY}${queryParam}&category=${category}&page=${page}&order=${order}&per_page=${perPage}&safesearch=true`
       );
       if (!response.ok) {
          throw new Error(response.statusText);
