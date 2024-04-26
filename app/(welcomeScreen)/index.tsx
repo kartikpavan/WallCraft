@@ -28,7 +28,7 @@ export default function WelcomeScreen() {
 
    return (
       <View style={styles.container} onLayout={onLayoutRootView}>
-         <StatusBar style="auto" />
+         <StatusBar style="light" />
          <Image
             source={require("../../assets/images/welcome.jpg")}
             resizeMode="cover"
@@ -52,7 +52,6 @@ export default function WelcomeScreen() {
                </View>
             </View>
             <Animated.View
-               // entering={FadeInDown.duration(500).delay(500)}
                entering={FlipInEasyX.delay(500).duration(500)}
                style={styles.btnContainer}>
                <WelcomeBtn title="Get Started" onPress={() => router.push("/home/")} />

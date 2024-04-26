@@ -13,7 +13,7 @@ export const heightPercentage = (percentage: number): number => {
 export const theme = {
    colors: {
       white: "#fff",
-      primary: "#	",
+      primary: "#ff865b",
       secondary: "#fd6f9c",
       accent: "#b387fa",
       info: "#89e0eb",
