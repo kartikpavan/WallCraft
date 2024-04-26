@@ -1,6 +1,6 @@
 import { Dimensions } from "react-native";
 
-const { width, height } = Dimensions.get("window");
+const { width, height } = Dimensions.get("screen");
 
 export const widthPercentage = (percentage: number): number => {
    return (percentage * width) / 100;
@@ -12,7 +12,8 @@ export const heightPercentage = (percentage: number): number => {
 
 export const theme = {
    colors: {
-      primary: "#ff865b",
+      white: "#fff",
+      primary: "#	",
       secondary: "#fd6f9c",
       accent: "#b387fa",
       info: "#89e0eb",
@@ -22,5 +23,5 @@ export const theme = {
       backgroundMuted: "#1b262c",
       error: "#ffbbbd",
    },
-   font: { xs: 12, sm: 14, md: 16, lg: 18, xl: 20 },
+   font: { xs: 14, sm: 16, md: 18, lg: 20, xl: 24 },
 };
