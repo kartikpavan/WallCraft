@@ -1,5 +1,4 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
 import { MasonryFlashList } from "@shopify/flash-list";
 import ImageCard from "./ImageCard";
 import { heightPercentage, widthPercentage } from "@/constants/theme";
@@ -28,5 +27,6 @@ const styles = StyleSheet.create({
       minHeight: heightPercentage(100),
       width: widthPercentage(100),
       marginTop: 20,
+      paddingBottom: 280,
    },
 });

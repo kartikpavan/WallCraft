@@ -48,6 +48,7 @@ const CategoryList = () => {
 };
 
 export default CategoryList;
+
 const styles = StyleSheet.create({
    categoryContainer: {
       paddingHorizontal: widthPercentage(4),

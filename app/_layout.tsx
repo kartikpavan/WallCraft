@@ -1,5 +1,3 @@
-import { StyleSheet } from "react-native";
-import React from "react";
 import { Stack } from "expo-router";
 import { AppContextProvider } from "@/context/AppContext";
 
@@ -15,5 +13,3 @@ const RootLayout = () => {
 };
 
 export default RootLayout;
-
-const styles = StyleSheet.create({});

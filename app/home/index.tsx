@@ -1,4 +1,4 @@
-import { Pressable, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { theme } from "@/constants/theme";
 import MaterialIcon from "@expo/vector-icons/MaterialIcons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -23,32 +23,28 @@ const HomeScreen = () => {
             </Pressable>
          </View>
          {/* SearchBar */}
-         <View>
-            <View style={styles.searchContainer}>
-               <Ionicons name="search" size={24} color="#9fb9d0" style={styles.icon} />
-               <TextInput
-                  style={styles.input}
-                  value={searchText}
-                  onChangeText={setSearchText}
-                  placeholder="Search..."
-                  placeholderTextColor="#9fb9d0"
-                  autoCorrect={true}
-               />
-               {searchText ? (
-                  <TouchableOpacity onPress={clearSearch} style={styles.icon}>
-                     <Ionicons name="close" size={24} color="#9fb9d0" />
-                  </TouchableOpacity>
-               ) : null}
-            </View>
+         <View style={styles.searchContainer}>
+            <Ionicons name="search" size={24} color="#9fb9d0" style={styles.icon} />
+            <TextInput
+               style={styles.input}
+               value={searchText}
+               onChangeText={setSearchText}
+               placeholder="Search..."
+               placeholderTextColor="#9fb9d0"
+               autoCorrect={true}
+            />
+            {searchText ? (
+               <TouchableOpacity onPress={clearSearch} style={styles.icon}>
+                  <Ionicons name="close" size={24} color="#9fb9d0" />
+               </TouchableOpacity>
+            ) : null}
          </View>
          {/* Category List */}
          <View>
             <CategoryList />
          </View>
-         <View>
-            {/* Images List */}
-            {images.length > 0 ? <ImageList /> : null}
-         </View>
+         {/* Images List */}
+         {images.length > 0 ? <ImageList /> : null}
       </View>
    );
 };

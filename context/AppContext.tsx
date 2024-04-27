@@ -6,8 +6,8 @@ import { createContext, useContext, useState, useEffect } from "react";
 type AppContextType = {
    setSearchText: (searchText: string) => void;
    clearSearch: () => void;
-   handleSelectCategory: (category: string) => void;
-   selectedCategory: string;
+   handleSelectCategory: (category: string | null) => void;
+   selectedCategory: string | null;
    images: PixabayImage[];
    searchText: string;
 };
@@ -23,7 +23,7 @@ const AppContext = createContext<AppContextType>({
 
 export const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
    const [searchText, setSearchText] = useState<string>("");
-   const [selectedCategory, setSlelectedCategory] = useState<string>("");
+   const [selectedCategory, setSlelectedCategory] = useState<string | null>(null);
    const [images, setImages] = useState<PixabayImage[]>([]);
    const [page, setPage] = useState(1);
    const debouncedValue = useDebounce(searchText, 600);
@@ -55,13 +55,13 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
       setSearchText("");
    };
 
-   const handleSelectCategory = (category: string) => {
+   const handleSelectCategory = (category: string | null) => {
       clearSearch();
-      setSlelectedCategory(category);
+      setSlelectedCategory(category === null ? "" : category);
       setImages([]);
       setPage(1);
-      if (category.length !== 0) {
-         fetchData(1, false, "", category);
+      if (category !== "") {
+         fetchData(1, false, "", category!); // TODO : FIX this null check
       }
    };
 
