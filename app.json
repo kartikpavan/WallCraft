@@ -4,11 +4,11 @@
       "slug": "wallcraft",
       "version": "1.0.0",
       "orientation": "portrait",
-      "icon": "./assets/images/icon.png",
+      "icon": "./assets/images/icon3.png",
       "scheme": "myapp",
       "userInterfaceStyle": "automatic",
       "splash": {
-         "image": "./assets/images/splash.png",
+         "image": "./assets/images/icon2.png",
          "resizeMode": "contain",
          "backgroundColor": "#121c22"
       },
@@ -18,7 +18,7 @@
       },
       "android": {
          "adaptiveIcon": {
-            "foregroundImage": "./assets/images/adaptive-icon.png",
+            "foregroundImage": "./assets/images/icon2.png",
             "backgroundColor": "#121c22"
          }
       },

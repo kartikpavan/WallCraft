@@ -3,15 +3,11 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { categories } from "@/constants/data";
 import CategoryBadge from "./CategoryBadge";
 import { widthPercentage } from "@/constants/theme";
+import { useAppContext } from "@/context/AppContext";
 
-interface CategoryBadgeProps {
-   handleSelectCategory: (category: string) => void;
-   selectedCategory: string | null;
-}
-
-const CategoryList = ({ handleSelectCategory, selectedCategory }: CategoryBadgeProps) => {
+const CategoryList = () => {
+   const { handleSelectCategory, selectedCategory } = useAppContext();
    const flatListRef = useRef<FlatList | null>(null);
-
    const scrollToTop = () => {
       flatListRef.current?.scrollToOffset({ offset: 0, animated: true });
    };

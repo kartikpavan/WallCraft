@@ -1,15 +1,12 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
-import { PixabayImage } from "@/types/types";
 import { MasonryFlashList } from "@shopify/flash-list";
 import ImageCard from "./ImageCard";
 import { heightPercentage, widthPercentage } from "@/constants/theme";
+import { useAppContext } from "@/context/AppContext";
 
-type ImageListProps = {
-   images: PixabayImage[];
-};
-
-const ImageList = ({ images }: ImageListProps) => {
+const ImageList = () => {
+   const { images } = useAppContext();
    return (
       <View style={styles.imagesContainer}>
          <MasonryFlashList

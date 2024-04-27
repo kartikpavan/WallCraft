@@ -1,81 +1,15 @@
-import {
-   Pressable,
-   StyleSheet,
-   Text,
-   TextInput,
-   TouchableOpacity,
-   TouchableOpacityBase,
-   View,
-} from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import { theme, widthPercentage } from "@/constants/theme";
+import { Pressable, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { theme } from "@/constants/theme";
 import MaterialIcon from "@expo/vector-icons/MaterialIcons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import CategoryList from "@/components/CategoryList";
 import ImageList from "@/components/ImageList";
-import { fetchImages } from "@/api";
-import { PixabayImage } from "@/types/types";
 import { Ionicons } from "@expo/vector-icons";
-import { useDebounce } from "@/hooks/useDebounce";
+import { styles } from "./home.styles";
+import { useAppContext } from "@/context/AppContext";
 
 const HomeScreen = () => {
-   const [searchText, setSearchText] = useState<string>("");
-   const [selectedCategory, setSlelectedCategory] = useState<string>("");
-   const [images, setImages] = useState<PixabayImage[]>([]);
-   const [page, setPage] = useState(1);
-   const debouncedValue = useDebounce(searchText, 600);
-
-   const fetchData = async (
-      page: number,
-      append: boolean = false,
-      query: string = "",
-      category: string = ""
-   ) => {
-      const response = await fetchImages({
-         category: category,
-         searchQuery: query,
-         order: "popular",
-         perPage: 25,
-         page: page,
-         append: true,
-      });
-      if (response?.success && response?.data.hits) {
-         if (append) {
-            setImages([...images, ...response.data.hits]);
-         } else {
-            setImages(response.data.hits);
-         }
-      }
-   };
-
-   const clearSearch = () => {
-      setSearchText("");
-   };
-
-   const handleSelectCategory = (category: string) => {
-      clearSearch();
-      setSlelectedCategory(category);
-      setImages([]);
-      setPage(1);
-      if (category.length !== 0) {
-         fetchData(1, false, "", category);
-      }
-   };
-
-   useEffect(() => {
-      if (debouncedValue.length > 2) {
-         setPage(1);
-         setImages([]);
-         setSlelectedCategory("");
-         fetchData(page, false, debouncedValue);
-      }
-      if (debouncedValue.length === 0) {
-         setPage(1);
-         setImages([]);
-         setSlelectedCategory("");
-         fetchData(page, false);
-      }
-   }, [debouncedValue]);
+   const { clearSearch, images, searchText, setSearchText } = useAppContext();
 
    const { top } = useSafeAreaInsets();
    const paddingTop = top > 0 ? top + 20 : 0;
@@ -98,8 +32,6 @@ const HomeScreen = () => {
                   onChangeText={setSearchText}
                   placeholder="Search..."
                   placeholderTextColor="#9fb9d0"
-                  // onSubmitEditing={handleSearch}
-                  // returnKeyType="search"
                   autoCorrect={true}
                />
                {searchText ? (
@@ -111,55 +43,14 @@ const HomeScreen = () => {
          </View>
          {/* Category List */}
          <View>
-            <CategoryList
-               handleSelectCategory={handleSelectCategory}
-               selectedCategory={selectedCategory}
-            />
+            <CategoryList />
          </View>
          <View>
             {/* Images List */}
-            {images.length > 0 ? <ImageList images={images} /> : null}
+            {images.length > 0 ? <ImageList /> : null}
          </View>
       </View>
    );
 };
 
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-   mainContainer: {
-      flex: 1,
-      backgroundColor: theme.colors.background,
-   },
-   header: {
-      paddingHorizontal: widthPercentage(4),
-      flexDirection: "row",
-      alignItems: "center",
-      justifyContent: "space-between",
-   },
-   title: {
-      textAlign: "center",
-      fontFamily: "Skatone",
-      textTransform: "uppercase",
-      fontSize: 28,
-      color: theme.colors.primary,
-   },
-   searchContainer: {
-      flexDirection: "row",
-      alignItems: "center",
-      backgroundColor: theme.colors.backgroundMuted,
-      borderRadius: 10,
-      paddingHorizontal: 10,
-      marginHorizontal: widthPercentage(4),
-      marginTop: 20,
-   },
-   input: {
-      flex: 1,
-      color: theme.colors.textMuted,
-      paddingLeft: 10,
-      fontSize: theme.font.md,
-   },
-   icon: {
-      padding: 10,
-   },
-});

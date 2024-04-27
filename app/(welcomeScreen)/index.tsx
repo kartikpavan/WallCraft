@@ -1,12 +1,12 @@
 import { useCallback } from "react";
-import { Text, View, StyleSheet, Image } from "react-native";
+import { Text, View, Image } from "react-native";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
-import { heightPercentage, theme, widthPercentage } from "@/constants/theme";
 import WelcomeBtn from "@/components/WelcomeBtn";
 import Animated, { FadeInUp, FlipInEasyX } from "react-native-reanimated";
 import { useRouter } from "expo-router";
+import { styles } from "./welcome.styles";
 SplashScreen.preventAutoHideAsync();
 
 export default function WelcomeScreen() {
@@ -38,7 +38,7 @@ export default function WelcomeScreen() {
             <View style={styles.heroContainer}>
                <Animated.Image
                   entering={FadeInUp.duration(500)}
-                  source={require("../../assets/images/icon2.png")}
+                  source={require("../../assets/images/icon3.png")}
                   style={styles.logo}
                   resizeMode="contain"
                />
@@ -62,46 +62,3 @@ export default function WelcomeScreen() {
       </View>
    );
 }
-
-const styles = StyleSheet.create({
-   container: { flex: 1 },
-   backgroundImage: {
-      width: widthPercentage(100),
-      height: heightPercentage(100),
-      position: "absolute",
-   },
-   contentContainer: {
-      flex: 1,
-      justifyContent: "center",
-      alignItems: "center",
-   },
-   heroContainer: {
-      width: widthPercentage(100),
-      height: heightPercentage(80),
-      justifyContent: "center",
-      alignItems: "center",
-   },
-   logo: {
-      height: heightPercentage(20),
-      width: widthPercentage(30),
-   },
-   title: {
-      textAlign: "center",
-      fontFamily: "Inter",
-      fontWeight: "700",
-      fontSize: theme.font.xl,
-      color: theme.colors.white,
-   },
-   subTitle: {
-      textAlign: "center",
-      marginTop: 10,
-      fontSize: theme.font.sm,
-      color: theme.colors.white,
-   },
-   btnContainer: {
-      width: widthPercentage(100),
-      height: heightPercentage(20),
-      justifyContent: "center",
-      alignItems: "center",
-   },
-});
