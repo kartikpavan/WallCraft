@@ -27,6 +27,5 @@ const styles = StyleSheet.create({
       minHeight: heightPercentage(100),
       width: widthPercentage(100),
       marginTop: 20,
-      paddingBottom: 280,
    },
 });

@@ -1,24 +1,30 @@
 import { fetchImages } from "@/api";
 import { useDebounce } from "@/hooks/useDebounce";
 import { PixabayImage } from "@/types/types";
-import { createContext, useContext, useState, useEffect } from "react";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
+import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
+import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
 
 type AppContextType = {
    setSearchText: (searchText: string) => void;
    clearSearch: () => void;
    handleSelectCategory: (category: string | null) => void;
+   handlePresentModalPress: () => void;
    selectedCategory: string | null;
    images: PixabayImage[];
    searchText: string;
+   bottomSheetModalRef: React.RefObject<BottomSheetModal>;
 };
 
 const AppContext = createContext<AppContextType>({
    setSearchText: () => {},
    clearSearch: () => {},
    handleSelectCategory: () => {},
+   handlePresentModalPress: () => {},
    selectedCategory: "",
    images: [],
    searchText: "",
+   bottomSheetModalRef: React.createRef<BottomSheetModalMethods>(),
 });
 
 export const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
@@ -27,6 +33,11 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
    const [images, setImages] = useState<PixabayImage[]>([]);
    const [page, setPage] = useState(1);
    const debouncedValue = useDebounce(searchText, 600);
+   const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+
+   const handlePresentModalPress = useCallback(() => {
+      bottomSheetModalRef.current?.present();
+   }, []);
 
    const fetchData = async (
       page: number,
@@ -89,6 +100,8 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
             images,
             handleSelectCategory,
             searchText,
+            handlePresentModalPress,
+            bottomSheetModalRef,
          }}>
          {children}
       </AppContext.Provider>
