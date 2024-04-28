@@ -3,7 +3,15 @@ import { useDebounce } from "@/hooks/useDebounce";
 import { PixabayImage } from "@/types/types";
 import { BottomSheetModal } from "@gorhom/bottom-sheet";
 import { BottomSheetModalMethods } from "@gorhom/bottom-sheet/lib/typescript/types";
-import React, { createContext, useContext, useState, useEffect, useRef, useCallback } from "react";
+import {
+   createContext,
+   useContext,
+   useState,
+   useEffect,
+   useRef,
+   useCallback,
+   createRef,
+} from "react";
 
 type AppContextType = {
    setSearchText: (searchText: string) => void;
@@ -24,7 +32,7 @@ const AppContext = createContext<AppContextType>({
    selectedCategory: "",
    images: [],
    searchText: "",
-   bottomSheetModalRef: React.createRef<BottomSheetModalMethods>(),
+   bottomSheetModalRef: createRef<BottomSheetModalMethods>(),
 });
 
 export const AppContextProvider = ({ children }: { children: React.ReactNode }) => {

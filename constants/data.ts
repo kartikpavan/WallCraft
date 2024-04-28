@@ -20,3 +20,22 @@ export const categories = [
    "business",
    "music",
 ];
+
+export const filterData = {
+   orientation: ["all", "horizontal", "vertical"],
+   image_type: ["all", "photo", "illustration", "vector"],
+   order: ["popular", "latest"],
+   colors: [
+      "red",
+      "orange",
+      "yellow",
+      "green",
+      "turquoise",
+      "blue",
+      "pink",
+      "white",
+      "gray",
+      "black",
+      "brown",
+   ],
+};
