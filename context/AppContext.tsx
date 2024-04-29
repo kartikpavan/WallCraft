@@ -18,10 +18,14 @@ type AppContextType = {
    clearSearch: () => void;
    handleSelectCategory: (category: string | null) => void;
    handlePresentModalPress: () => void;
+   resetFilters: () => void;
+   handleFilterSelect: (filterName: string, selectedItem: string) => void;
+   handleApplyFilters: () => void;
    selectedCategory: string | null;
    images: PixabayImage[];
    searchText: string;
    bottomSheetModalRef: React.RefObject<BottomSheetModal>;
+   selectedFilters: object;
 };
 
 const AppContext = createContext<AppContextType>({
@@ -29,10 +33,14 @@ const AppContext = createContext<AppContextType>({
    clearSearch: () => {},
    handleSelectCategory: () => {},
    handlePresentModalPress: () => {},
+   resetFilters: () => {},
+   handleFilterSelect: () => {},
+   handleApplyFilters: () => {},
    selectedCategory: "",
    images: [],
    searchText: "",
    bottomSheetModalRef: createRef<BottomSheetModalMethods>(),
+   selectedFilters: {},
 });
 
 export const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
@@ -40,6 +48,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
    const [selectedCategory, setSlelectedCategory] = useState<string | null>(null);
    const [images, setImages] = useState<PixabayImage[]>([]);
    const [page, setPage] = useState(1);
+   const [selectedFilters, setSelectedFilters] = useState({});
    const debouncedValue = useDebounce(searchText, 600);
    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
 
@@ -49,18 +58,13 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 
    const fetchData = async (
       page: number,
-      append: boolean = false,
-      query: string = "",
-      category: string = ""
+      append = false,
+      searchQuery = "",
+      category: string = "",
+      selectedFilters = {}
    ) => {
-      const response = await fetchImages({
-         category: category,
-         searchQuery: query,
-         order: "popular",
-         perPage: 25,
-         page: page,
-         append: true,
-      });
+      const params = { category, searchQuery, page, append: true, ...selectedFilters };
+      const response = await fetchImages(params);
       if (response?.success && response?.data.hits) {
          if (append) {
             setImages([...images, ...response.data.hits]);
@@ -74,6 +78,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
       setSearchText("");
    };
 
+   // CATEGORIES
    const handleSelectCategory = (category: string | null) => {
       clearSearch();
       setSlelectedCategory(category === null ? "" : category);
@@ -82,6 +87,30 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
       if (category !== "") {
          fetchData(1, false, "", category!); // TODO : FIX this null check
       }
+   };
+
+   // FILTERS
+   const handleFilterSelect = (filterName: string, selectedItem: string) => {
+      setSelectedFilters((prevFilters: any) => ({
+         ...prevFilters,
+         [filterName]: selectedItem,
+      }));
+   };
+
+   const handleClearFilters = () => {
+      setSelectedFilters({});
+   };
+
+   const handleApplyFilters = () => {
+      // Checking if any filter is selected
+      if (Object.keys(selectedFilters).length > 0) {
+         setPage(1);
+         setImages([]);
+         const newSelectedFilters = { ...selectedFilters };
+         fetchData(1, false, debouncedValue, "", newSelectedFilters);
+      }
+      // Close the Bottom sheet
+      bottomSheetModalRef.current?.close();
    };
 
    useEffect(() => {
@@ -110,6 +139,10 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
             searchText,
             handlePresentModalPress,
             bottomSheetModalRef,
+            handleApplyFilters,
+            resetFilters: handleClearFilters,
+            selectedFilters,
+            handleFilterSelect,
          }}>
          {children}
       </AppContext.Provider>

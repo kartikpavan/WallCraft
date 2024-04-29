@@ -2,20 +2,18 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useMemo, useState } from "react";
 import { BottomSheetModal, BottomSheetView, TouchableOpacity } from "@gorhom/bottom-sheet";
 import { useAppContext } from "@/context/AppContext";
-import { heightPercentage, theme, widthPercentage } from "@/constants/theme";
+import { theme, widthPercentage } from "@/constants/theme";
 import { filterData } from "@/constants/data";
 
 const FilterModel = () => {
-   const { bottomSheetModalRef } = useAppContext();
+   const {
+      bottomSheetModalRef,
+      handleFilterSelect,
+      resetFilters,
+      handleApplyFilters,
+      selectedFilters,
+   } = useAppContext();
    const snapPoints = useMemo(() => ["25%", "65%"], []);
-   const [selectedFilters, setSelectedFilters] = useState({});
-
-   const handleFilterSelect = (filterName: string, selectedItem: string) => {
-      setSelectedFilters((prevFilters) => ({
-         ...prevFilters,
-         [filterName]: selectedItem,
-      }));
-   };
 
    const badgeStyle = (filterName: string, selectedItem: string) => {
       // @ts-ignore
@@ -51,8 +49,6 @@ const FilterModel = () => {
               backgroundColor: selectedItem,
            };
    };
-
-   console.log(selectedFilters);
 
    return (
       <BottomSheetModal
@@ -120,10 +116,14 @@ const FilterModel = () => {
                   ))}
                </View>
                <View style={styles.btnContainer}>
-                  <TouchableOpacity style={[styles.button, styles.resetButton]}>
+                  <TouchableOpacity
+                     style={[styles.button, styles.resetButton]}
+                     onPress={resetFilters}>
                      <Text style={styles.buttonText}>Reset</Text>
                   </TouchableOpacity>
-                  <TouchableOpacity style={[styles.button, styles.applyButton]}>
+                  <TouchableOpacity
+                     style={[styles.button, styles.applyButton]}
+                     onPress={handleApplyFilters}>
                      <Text style={styles.buttonText}>Apply</Text>
                   </TouchableOpacity>
                </View>
