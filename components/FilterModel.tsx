@@ -127,9 +127,10 @@ const FilterModel = () => {
                </Animated.Text>
                <View style={styles.flexContainer}>
                   {filterData.colors.map((item, index) => (
-                     <Animated.View entering={FadeInDown.delay(index * 100 + 100).damping(10)}>
+                     <Animated.View
+                        entering={FadeInDown.delay(index * 100 + 100).damping(10)}
+                        key={index}>
                         <Pressable
-                           key={index}
                            style={[styles.colorWrapper, colorWrapperStyle("colors", item)]}
                            onPress={() => handleFilterSelect("colors", item)}>
                            <Animated.Text

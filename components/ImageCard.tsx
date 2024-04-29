@@ -1,8 +1,9 @@
 import { Pressable, StyleSheet } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { Image } from "expo-image";
 import { PixabayImage } from "@/types/types";
 import { theme, widthPercentage } from "@/constants/theme";
+import ImageModal from "./ImageModal";
 
 interface ImageCardProps {
    image: PixabayImage;
@@ -10,6 +11,16 @@ interface ImageCardProps {
 }
 
 const ImageCard = ({ image, index }: ImageCardProps) => {
+   const [isModalVisible, setIsModalVisible] = useState(false);
+
+   const onModalOpen = () => {
+      setIsModalVisible(true);
+   };
+
+   const onModalClose = () => {
+      setIsModalVisible(false);
+   };
+
    // Adding margin to the right of the image if it is the last item in the current row
    const isLastItem = () => {
       return (index + 1) % 2 === 0;
@@ -32,13 +43,16 @@ const ImageCard = ({ image, index }: ImageCardProps) => {
       return { height: getImageSize() };
    };
    return (
-      <Pressable style={[styles.wrapper, !isLastItem() && styles.spacing]}>
-         <Image
-            source={{ uri: image?.webformatURL }}
-            style={[styles.image, getImageHeight()]}
-            transition={100}
-         />
-      </Pressable>
+      <>
+         <Pressable style={[styles.wrapper, !isLastItem() && styles.spacing]} onPress={onModalOpen}>
+            <Image
+               source={{ uri: image?.webformatURL }}
+               style={[styles.image, getImageHeight()]}
+               transition={100}
+            />
+         </Pressable>
+         <ImageModal isVisible={isModalVisible} image={image} onModalClose={onModalClose} />
+      </>
    );
 };
 
