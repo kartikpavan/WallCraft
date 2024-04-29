@@ -45,12 +45,11 @@ const AppContext = createContext<AppContextType>({
    selectedFilters: {},
    handleScroll: () => {},
 });
-
+let page = 1;
 export const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
    const [searchText, setSearchText] = useState<string>("");
    const [selectedCategory, setSlelectedCategory] = useState<string | null>(null);
    const [images, setImages] = useState<PixabayImage[]>([]);
-   const [page, setPage] = useState(1);
    const [selectedFilters, setSelectedFilters] = useState({});
    const debouncedValue = useDebounce(searchText, 600);
    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -87,8 +86,14 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
       if (scrollOffset >= bottomPosition) {
          if (!isEndReached) {
             setIsEndReached(true);
-            setPage((prev) => prev + 1);
-            fetchData(page + 1, true, debouncedValue, selectedCategory!, { ...selectedFilters });
+            ++page;
+            if (debouncedValue.length > 2) {
+               fetchData(page, true, debouncedValue, selectedCategory!, { ...selectedFilters });
+            }
+            if (selectedCategory !== "") {
+               fetchData(page, true, debouncedValue, selectedCategory!, { ...selectedFilters });
+            }
+            fetchData(page, true, debouncedValue, selectedCategory!, { ...selectedFilters });
          }
       } else if (isEndReached) {
          setIsEndReached(false);
@@ -104,9 +109,9 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
       clearSearch();
       setSlelectedCategory(category === null ? "" : category);
       setImages([]);
-      setPage(1);
+      page = 1;
       if (category !== "") {
-         fetchData(1, false, "", category!, { ...selectedFilters });
+         fetchData(page, false, "", category!, { ...selectedFilters });
       }
    };
 
@@ -120,10 +125,10 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 
    const handleClearFilters = () => {
       if (Object.keys(selectedFilters).length > 0) {
-         setPage(1);
+         page = 1;
          setImages([]);
          setSelectedFilters({});
-         fetchData(1, false, debouncedValue, selectedCategory!);
+         fetchData(page, false, debouncedValue, selectedCategory!);
       }
       // Close the Bottom sheet
       bottomSheetModalRef.current?.close();
@@ -132,10 +137,10 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
    const handleApplyFilters = () => {
       // Checking if any filter is selected
       if (Object.keys(selectedFilters).length > 0) {
-         setPage(1);
+         page = 1;
          setImages([]);
          const newSelectedFilters = { ...selectedFilters };
-         fetchData(1, false, debouncedValue, "", newSelectedFilters);
+         fetchData(page, false, debouncedValue, "", newSelectedFilters);
       }
       // Close the Bottom sheet
       bottomSheetModalRef.current?.close();
@@ -143,13 +148,13 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 
    useEffect(() => {
       if (debouncedValue.length > 2) {
-         setPage(1);
+         page = 1;
          setImages([]);
          setSlelectedCategory("");
          fetchData(page, false, debouncedValue);
       }
       if (debouncedValue.length === 0) {
-         setPage(1);
+         page = 1;
          setImages([]);
          setSlelectedCategory("");
          fetchData(page, false);

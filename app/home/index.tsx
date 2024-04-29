@@ -1,4 +1,12 @@
-import { Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+   ActivityIndicator,
+   Pressable,
+   ScrollView,
+   Text,
+   TextInput,
+   TouchableOpacity,
+   View,
+} from "react-native";
 import { theme } from "@/constants/theme";
 import MaterialIcon from "@expo/vector-icons/MaterialIcons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -8,7 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { styles } from "./home.styles";
 import { useAppContext } from "@/context/AppContext";
 import FilterModel from "@/components/FilterModel";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 
 const HomeScreen = () => {
    const {
@@ -64,7 +72,12 @@ const HomeScreen = () => {
             </View>
             {/* Images List */}
             {images.length > 0 ? <ImageList /> : null}
+            {/* Loading */}
+            <View style={{ marginBottom: 50, marginTop: images.length > 0 ? 10 : 50 }}>
+               <ActivityIndicator size="large" color={theme.colors.primary} />
+            </View>
          </ScrollView>
+
          {/* Filter Bottom Sheet*/}
          <FilterModel />
       </View>
