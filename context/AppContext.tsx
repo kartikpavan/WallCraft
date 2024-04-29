@@ -12,6 +12,7 @@ import {
    useCallback,
    createRef,
 } from "react";
+import { NativeScrollEvent, NativeSyntheticEvent, ScrollView } from "react-native";
 
 type AppContextType = {
    setSearchText: (searchText: string) => void;
@@ -26,6 +27,7 @@ type AppContextType = {
    searchText: string;
    bottomSheetModalRef: React.RefObject<BottomSheetModal>;
    selectedFilters: object;
+   handleScroll: (event: NativeSyntheticEvent<NativeScrollEvent>) => void;
 };
 
 const AppContext = createContext<AppContextType>({
@@ -41,6 +43,7 @@ const AppContext = createContext<AppContextType>({
    searchText: "",
    bottomSheetModalRef: createRef<BottomSheetModalMethods>(),
    selectedFilters: {},
+   handleScroll: () => {},
 });
 
 export const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
@@ -51,6 +54,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
    const [selectedFilters, setSelectedFilters] = useState({});
    const debouncedValue = useDebounce(searchText, 600);
    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
+   const [isEndReached, setIsEndReached] = useState(false);
 
    const handlePresentModalPress = useCallback(() => {
       bottomSheetModalRef.current?.present();
@@ -74,6 +78,23 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
       }
    };
 
+   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const contentHeight = event.nativeEvent.contentSize.height;
+      const scrollViewHeight = event.nativeEvent.layoutMeasurement.height;
+      const scrollOffset = event.nativeEvent.contentOffset.y;
+      const bottomPosition = contentHeight - scrollViewHeight;
+
+      if (scrollOffset >= bottomPosition) {
+         if (!isEndReached) {
+            setIsEndReached(true);
+            setPage((prev) => prev + 1);
+            fetchData(page + 1, true, debouncedValue, selectedCategory!, { ...selectedFilters });
+         }
+      } else if (isEndReached) {
+         setIsEndReached(false);
+      }
+   };
+
    const clearSearch = () => {
       setSearchText("");
    };
@@ -85,7 +106,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
       setImages([]);
       setPage(1);
       if (category !== "") {
-         fetchData(1, false, "", category!, { ...selectedFilters }); // TODO : FIX this null check
+         fetchData(1, false, "", category!, { ...selectedFilters });
       }
    };
 
@@ -150,6 +171,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
             resetFilters: handleClearFilters,
             selectedFilters,
             handleFilterSelect,
+            handleScroll,
          }}>
          {children}
       </AppContext.Provider>

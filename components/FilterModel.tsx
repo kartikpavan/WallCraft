@@ -4,6 +4,7 @@ import { BottomSheetModal, BottomSheetView, TouchableOpacity } from "@gorhom/bot
 import { useAppContext } from "@/context/AppContext";
 import { theme, widthPercentage } from "@/constants/theme";
 import { filterData } from "@/constants/data";
+import Animated, { FadeInDown, FlipInEasyX } from "react-native-reanimated";
 
 const FilterModel = () => {
    const {
@@ -66,66 +67,93 @@ const FilterModel = () => {
          )}>
          <BottomSheetView style={styles.mainContainer}>
             <View>
-               {/* <Text style={styles.title}>Filters</Text> */}
                {/* Order */}
-               <Text style={styles.subTitle}>Sort</Text>
+               <Animated.Text entering={FadeInDown.delay(200).damping(10)} style={styles.subTitle}>
+                  Sort
+               </Animated.Text>
                <View style={styles.flexContainer}>
                   {filterData.order.map((item, index) => (
                      <Pressable
                         key={index}
                         style={[styles.badge, badgeStyle("order", item)]}
                         onPress={() => handleFilterSelect("order", item)}>
-                        <Text style={[styles.text, textStyle("order", item)]}>{item}</Text>
+                        <Animated.Text
+                           entering={FadeInDown.delay(index * 100).damping(10)}
+                           style={[styles.text, textStyle("order", item)]}>
+                           {item}
+                        </Animated.Text>
                      </Pressable>
                   ))}
                </View>
                {/* Orientation */}
-               <Text style={styles.subTitle}>Orientation</Text>
+               <Animated.Text style={styles.subTitle} entering={FadeInDown.delay(200).damping(10)}>
+                  Orientation
+               </Animated.Text>
                <View style={styles.flexContainer}>
                   {filterData.orientation.map((item, index) => (
                      <Pressable
                         key={index}
                         style={[styles.badge, badgeStyle("orientation", item)]}
                         onPress={() => handleFilterSelect("orientation", item)}>
-                        <Text style={[styles.text, textStyle("orientation", item)]}>{item}</Text>
+                        <Animated.Text
+                           entering={FadeInDown.delay(index * 100).damping(10)}
+                           style={[styles.text, textStyle("orientation", item)]}>
+                           {item}
+                        </Animated.Text>
                      </Pressable>
                   ))}
                </View>
                {/* Image Type */}
-               <Text style={styles.subTitle}>Image Type</Text>
+               <Animated.Text style={styles.subTitle} entering={FadeInDown.delay(200).damping(10)}>
+                  Image Type
+               </Animated.Text>
                <View style={styles.flexContainer}>
                   {filterData.image_type.map((item, index) => (
                      <Pressable
                         key={index}
                         style={[styles.badge, badgeStyle("image_type", item)]}
                         onPress={() => handleFilterSelect("image_type", item)}>
-                        <Text style={[styles.text, textStyle("image_type", item)]}>{item}</Text>
+                        <Animated.Text
+                           entering={FadeInDown.delay(index * 100).damping(10)}
+                           style={[styles.text, textStyle("image_type", item)]}>
+                           {item}
+                        </Animated.Text>
                      </Pressable>
                   ))}
                </View>
                {/* Colors */}
-               <Text style={styles.subTitle}>Colors</Text>
+               <Animated.Text style={styles.subTitle} entering={FadeInDown.delay(200).damping(10)}>
+                  Colors
+               </Animated.Text>
                <View style={styles.flexContainer}>
                   {filterData.colors.map((item, index) => (
-                     <Pressable
-                        key={index}
-                        style={[styles.colorWrapper, colorWrapperStyle("colors", item)]}
-                        onPress={() => handleFilterSelect("colors", item)}>
-                        <Text style={[styles.text, textStyle("colors", item)]}></Text>
-                     </Pressable>
+                     <Animated.View entering={FadeInDown.delay(index * 100 + 100).damping(10)}>
+                        <Pressable
+                           key={index}
+                           style={[styles.colorWrapper, colorWrapperStyle("colors", item)]}
+                           onPress={() => handleFilterSelect("colors", item)}>
+                           <Animated.Text
+                              entering={FadeInDown.delay(index * 100).damping(10)}
+                              style={[styles.text, textStyle("colors", item)]}></Animated.Text>
+                        </Pressable>
+                     </Animated.View>
                   ))}
                </View>
                <View style={styles.btnContainer}>
-                  <TouchableOpacity
-                     style={[styles.button, styles.resetButton]}
-                     onPress={resetFilters}>
-                     <Text style={styles.buttonText}>Reset</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                     style={[styles.button, styles.applyButton]}
-                     onPress={handleApplyFilters}>
-                     <Text style={styles.buttonText}>Apply</Text>
-                  </TouchableOpacity>
+                  <Animated.View entering={FlipInEasyX.delay(1300).duration(400)}>
+                     <TouchableOpacity
+                        style={[styles.button, styles.resetButton]}
+                        onPress={resetFilters}>
+                        <Text style={styles.buttonText}>Reset</Text>
+                     </TouchableOpacity>
+                  </Animated.View>
+                  <Animated.View entering={FlipInEasyX.delay(1300).duration(400)}>
+                     <TouchableOpacity
+                        style={[styles.button, styles.applyButton]}
+                        onPress={handleApplyFilters}>
+                        <Text style={styles.buttonText}>Apply</Text>
+                     </TouchableOpacity>
+                  </Animated.View>
                </View>
             </View>
          </BottomSheetView>
