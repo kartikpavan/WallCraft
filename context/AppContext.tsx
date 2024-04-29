@@ -85,7 +85,7 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
       setImages([]);
       setPage(1);
       if (category !== "") {
-         fetchData(1, false, "", category!); // TODO : FIX this null check
+         fetchData(1, false, "", category!, { ...selectedFilters }); // TODO : FIX this null check
       }
    };
 
@@ -98,7 +98,14 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
    };
 
    const handleClearFilters = () => {
-      setSelectedFilters({});
+      if (Object.keys(selectedFilters).length > 0) {
+         setPage(1);
+         setImages([]);
+         setSelectedFilters({});
+         fetchData(1, false, debouncedValue, selectedCategory!);
+      }
+      // Close the Bottom sheet
+      bottomSheetModalRef.current?.close();
    };
 
    const handleApplyFilters = () => {

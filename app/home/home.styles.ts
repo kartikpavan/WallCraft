@@ -38,4 +38,13 @@ export const styles = StyleSheet.create({
    icon: {
       padding: 10,
    },
+   indicator: {
+      position: "absolute",
+      top: 0,
+      right: 0,
+      width: 6,
+      height: 6,
+      borderRadius: 5,
+      backgroundColor: theme.colors.error,
+   },
 });

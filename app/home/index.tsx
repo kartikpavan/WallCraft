@@ -10,8 +10,14 @@ import { useAppContext } from "@/context/AppContext";
 import FilterModel from "@/components/FilterModel";
 
 const HomeScreen = () => {
-   const { clearSearch, images, searchText, setSearchText, handlePresentModalPress } =
-      useAppContext();
+   const {
+      clearSearch,
+      images,
+      searchText,
+      setSearchText,
+      handlePresentModalPress,
+      selectedFilters,
+   } = useAppContext();
 
    const { top } = useSafeAreaInsets();
    const paddingTop = top > 0 ? top + 20 : 0;
@@ -20,8 +26,9 @@ const HomeScreen = () => {
          {/* Header */}
          <View style={styles.header}>
             <Text style={styles.title}>WallCraft</Text>
-            <Pressable onPress={handlePresentModalPress}>
-               <MaterialIcon name="menu-open" size={30} color={theme.colors.text} />
+            <Pressable onPress={handlePresentModalPress} style={{ position: "relative" }}>
+               {Object.keys(selectedFilters).length > 0 && <View style={styles.indicator} />}
+               <MaterialIcon name="filter-list" size={30} color={theme.colors.text} />
             </Pressable>
          </View>
          <ScrollView>
