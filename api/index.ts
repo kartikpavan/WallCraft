@@ -9,17 +9,16 @@ type ParamsType = {
    orientation?: "all" | "horizontal" | "vertical";
    image_type?: "all" | "photo" | "illustration" | "vector";
    colors?: string;
-   append?: boolean;
 };
 
 export const fetchImages = async ({
    category,
    searchQuery,
    page,
-   order = "popular",
+   order,
    perPage = 25,
-   orientation = "all",
-   image_type = "all",
+   orientation,
+   image_type,
    colors,
 }: ParamsType) => {
    try {

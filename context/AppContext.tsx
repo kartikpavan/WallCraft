@@ -61,12 +61,12 @@ export const AppContextProvider = ({ children }: { children: React.ReactNode }) 
 
    const fetchData = async (
       page: number,
-      append = false,
+      append: boolean,
       searchQuery = "",
       category: string = "",
       selectedFilters = {}
    ) => {
-      const params = { category, searchQuery, page, append: true, ...selectedFilters };
+      const params = { category, searchQuery, page, ...selectedFilters };
       const response = await fetchImages(params);
       if (response?.success && response?.data.hits) {
          if (append) {
