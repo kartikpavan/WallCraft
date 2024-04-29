@@ -1,14 +1,15 @@
-import { ActivityIndicator, Alert, Modal, Pressable, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Alert, Modal, Pressable, StyleSheet, Text, View } from "react-native";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { PixabayImage } from "@/types/types";
 import { BlurView } from "expo-blur";
 import { Image } from "expo-image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { heightPercentage, theme, widthPercentage } from "@/constants/theme";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 import * as FileSystem from "expo-file-system";
 import * as Sharing from "expo-sharing";
 import * as MediaLibrary from "expo-media-library";
+import Toast, { ToastConfig, ToastConfigParams } from "react-native-toast-message";
 
 type ImageModalProps = {
    isVisible: boolean;
@@ -41,9 +42,18 @@ const ImageModal = ({ image, isVisible, onModalClose }: ImageModalProps) => {
 
    const handleDownloadImage = async () => {
       setStatus("downloading");
-      const uri = await downloadFile();
+      const uri = await downloadFile(); // temp URI
       if (uri) {
-         setStatus("downloaded");
+         showToast("success", "Image saved to Downloads Folder 👌");
+      }
+   };
+
+   const handleShareImage = async () => {
+      setStatus("sharing");
+      const uri = await downloadFile(); // temp URI
+      if (uri) {
+         await Sharing.shareAsync(uri);
+         setStatus("");
       }
    };
 
@@ -59,26 +69,37 @@ const ImageModal = ({ image, isVisible, onModalClose }: ImageModalProps) => {
          // Save to Media Library
          await MediaLibrary.saveToLibraryAsync(finalFilePath);
          console.log("File saved to Downloads:", finalFilePath);
-         Alert.alert("Success", "File saved to Downloads");
          setStatus("");
-         return temporaryUri;
+         return finalFilePath;
       } catch (error) {
          if (error instanceof Error) {
             setStatus("");
             console.log(error.message);
             Alert.alert("Image", error.message);
+            showToast("error", "Failed to download image");
             return null;
          }
       }
    };
 
-   const handleShareImage = async () => {
-      setStatus("sharing");
-      const uri = await downloadFile();
-      if (uri) {
-         await Sharing.shareAsync(uri);
-         setStatus("");
-      }
+   const showToast = (type: "success" | "error", message: string) => {
+      Toast.show({
+         type: type,
+         text1: message,
+         position: "bottom",
+         visibilityTime: 3000,
+         autoHide: true,
+      });
+   };
+
+   const toastConfig: ToastConfig = {
+      success: ({ text1, props, ...rest }) => {
+         return (
+            <View style={styles.toast}>
+               <Text style={styles.toastText}>{text1}</Text>
+            </View>
+         );
+      },
    };
 
    return (
@@ -128,6 +149,7 @@ const ImageModal = ({ image, isVisible, onModalClose }: ImageModalProps) => {
                </View>
             </View>
          </BlurView>
+         <Toast config={toastConfig} />
       </Modal>
    );
 };
@@ -168,5 +190,17 @@ const styles = StyleSheet.create({
       backgroundColor: "rgba(255, 134, 91, 0.5)",
       borderRadius: 15,
       borderCurve: "continuous",
+   },
+   toast: {
+      paddingVertical: 15,
+      paddingHorizontal: 30,
+      borderRadius: 15,
+      justifyContent: "center",
+      alignItems: "center",
+      backgroundColor: "rgba(137,224,235, 0.5)",
+   },
+   toastText: {
+      fontSize: theme.font.sm,
+      color: "#fff",
    },
 });
