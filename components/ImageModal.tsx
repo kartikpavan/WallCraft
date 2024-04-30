@@ -24,12 +24,12 @@ const ImageModal = ({ image, isVisible, onModalClose }: ImageModalProps) => {
    const temporaryFilePath = `${FileSystem.cacheDirectory}${fileName}`;
    const finalFilePath = `${FileSystem.documentDirectory}${fileName}`;
 
+   // Image Size Calculation
    const getSize = () => {
       const aspectRatio = image?.imageWidth / image?.imageHeight;
       let height = widthPercentage(92) / aspectRatio;
       let width = widthPercentage(92);
-      // Potrait
-      if (aspectRatio < 1) width = height * aspectRatio;
+      if (aspectRatio < 1) width = height * aspectRatio; // Portait
       return {
          height: height,
          width: width,
@@ -40,6 +40,7 @@ const ImageModal = ({ image, isVisible, onModalClose }: ImageModalProps) => {
       setStatus("");
    };
 
+   // Download Image
    const handleDownloadImage = async () => {
       setStatus("downloading");
       const uri = await downloadFile(); // temp URI
@@ -48,6 +49,7 @@ const ImageModal = ({ image, isVisible, onModalClose }: ImageModalProps) => {
       }
    };
 
+   // Sharing
    const handleShareImage = async () => {
       setStatus("sharing");
       const uri = await downloadFile(); // temp URI
@@ -57,6 +59,7 @@ const ImageModal = ({ image, isVisible, onModalClose }: ImageModalProps) => {
       }
    };
 
+   // Download File to Downloads Folder and Save to Media Library
    const downloadFile = async () => {
       try {
          // Download the file to the temporary location
@@ -82,6 +85,7 @@ const ImageModal = ({ image, isVisible, onModalClose }: ImageModalProps) => {
       }
    };
 
+   // Show Toast Function
    const showToast = (type: "success" | "error", message: string) => {
       Toast.show({
          type: type,
@@ -92,6 +96,7 @@ const ImageModal = ({ image, isVisible, onModalClose }: ImageModalProps) => {
       });
    };
 
+   // Toast Config
    const toastConfig: ToastConfig = {
       success: ({ text1, props, ...rest }) => {
          return (

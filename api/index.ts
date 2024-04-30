@@ -52,7 +52,3 @@ export const fetchImages = async ({
       }
    }
 };
-
-// &category=${encodeURIComponent(
-// category
-// )}

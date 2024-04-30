@@ -6,7 +6,7 @@ import Animated, { FadeInRight } from "react-native-reanimated";
 interface CategoryBadgeProps {
    category: string;
    index: number;
-   handleSelectCategory: (category: string) => void;
+   handleSelectCategory: (category: string | null) => void;
    selectedCategory: string | null;
 }
 

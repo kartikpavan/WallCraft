@@ -1,11 +1,11 @@
-import { StyleSheet, View } from "react-native";
-import { MasonryFlashList } from "@shopify/flash-list";
-import ImageCard from "./ImageCard";
 import { heightPercentage, widthPercentage } from "@/constants/theme";
-import { useAppContext } from "@/context/AppContext";
+import { useDataStore } from "@/store/data.store";
+import { MasonryFlashList } from "@shopify/flash-list";
+import { StyleSheet, View } from "react-native";
+import ImageCard from "./ImageCard";
 
 const ImageList = () => {
-   const { images } = useAppContext();
+   const { images } = useDataStore((state) => state);
    return (
       <View style={styles.imagesContainer}>
          <MasonryFlashList

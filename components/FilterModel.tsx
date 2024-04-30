@@ -1,59 +1,42 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { BottomSheetModal, BottomSheetView, TouchableOpacity } from "@gorhom/bottom-sheet";
-import { useAppContext } from "@/context/AppContext";
 import { theme, widthPercentage } from "@/constants/theme";
 import { filterData } from "@/constants/data";
 import Animated, { FadeInDown, FlipInEasyX } from "react-native-reanimated";
+import { useFilterStore } from "@/store/filter.store";
 
-const FilterModel = () => {
-   const {
-      bottomSheetModalRef,
-      handleFilterSelect,
-      resetFilters,
-      handleApplyFilters,
-      selectedFilters,
-   } = useAppContext();
+type FilterModelProps = {
+   filterRef: React.RefObject<BottomSheetModal>;
+};
+
+const FilterModel = ({ filterRef }: FilterModelProps) => {
+   const { filters, setFilters, handleClearFiltersAndFetchData, handleApplyFiltersAndFetchData } =
+      useFilterStore((state) => state);
+
    const snapPoints = useMemo(() => ["25%", "65%"], []);
 
    const badgeStyle = (filterName: string, selectedItem: string) => {
-      // @ts-ignore
-      return selectedFilters[filterName] === selectedItem
-         ? {
-              backgroundColor: theme.colors.secondary,
-           }
-         : {
-              backgroundColor: theme.colors.background,
-           };
+      return filters[filterName] === selectedItem
+         ? { backgroundColor: theme.colors.primary }
+         : { backgroundColor: theme.colors.background };
    };
 
    const textStyle = (filterName: string, selectedItem: string) => {
-      // @ts-ignore
-      return selectedFilters[filterName] === selectedItem
-         ? {
-              color: theme.colors.white,
-           }
-         : {
-              color: theme.colors.text,
-           };
+      return filters[filterName] === selectedItem
+         ? { color: theme.colors.white }
+         : { color: theme.colors.text };
    };
 
    const colorWrapperStyle = (filterName: string, selectedItem: string) => {
-      // @ts-ignore
-      return selectedFilters[filterName] === selectedItem
-         ? {
-              backgroundColor: selectedItem,
-              borderWidth: 3,
-              borderColor: theme.colors.secondary,
-           }
-         : {
-              backgroundColor: selectedItem,
-           };
+      return filters[filterName] === selectedItem
+         ? { backgroundColor: selectedItem, borderWidth: 3, borderColor: theme.colors.primary }
+         : { backgroundColor: selectedItem };
    };
 
    return (
       <BottomSheetModal
-         ref={bottomSheetModalRef}
+         ref={filterRef}
          index={1}
          snapPoints={snapPoints}
          handleStyle={{
@@ -76,7 +59,7 @@ const FilterModel = () => {
                      <Pressable
                         key={index}
                         style={[styles.badge, badgeStyle("order", item)]}
-                        onPress={() => handleFilterSelect("order", item)}>
+                        onPress={() => setFilters({ ...filters, ["order"]: item })}>
                         <Animated.Text
                            entering={FadeInDown.delay(index * 100).damping(10)}
                            style={[styles.text, textStyle("order", item)]}>
@@ -94,7 +77,7 @@ const FilterModel = () => {
                      <Pressable
                         key={index}
                         style={[styles.badge, badgeStyle("orientation", item)]}
-                        onPress={() => handleFilterSelect("orientation", item)}>
+                        onPress={() => setFilters({ ...filters, ["orientation"]: item })}>
                         <Animated.Text
                            entering={FadeInDown.delay(index * 100).damping(10)}
                            style={[styles.text, textStyle("orientation", item)]}>
@@ -112,7 +95,7 @@ const FilterModel = () => {
                      <Pressable
                         key={index}
                         style={[styles.badge, badgeStyle("image_type", item)]}
-                        onPress={() => handleFilterSelect("image_type", item)}>
+                        onPress={() => setFilters({ ...filters, ["image_type"]: item })}>
                         <Animated.Text
                            entering={FadeInDown.delay(index * 100).damping(10)}
                            style={[styles.text, textStyle("image_type", item)]}>
@@ -132,7 +115,7 @@ const FilterModel = () => {
                         key={index}>
                         <Pressable
                            style={[styles.colorWrapper, colorWrapperStyle("colors", item)]}
-                           onPress={() => handleFilterSelect("colors", item)}>
+                           onPress={() => setFilters({ ...filters, ["colors"]: item })}>
                            <Animated.Text
                               entering={FadeInDown.delay(index * 100).damping(10)}
                               style={[styles.text, textStyle("colors", item)]}></Animated.Text>
@@ -144,14 +127,14 @@ const FilterModel = () => {
                   <Animated.View entering={FlipInEasyX.delay(1300).duration(400)}>
                      <TouchableOpacity
                         style={[styles.button, styles.resetButton]}
-                        onPress={resetFilters}>
+                        onPress={() => handleClearFiltersAndFetchData(filterRef)}>
                         <Text style={styles.buttonText}>Reset</Text>
                      </TouchableOpacity>
                   </Animated.View>
                   <Animated.View entering={FlipInEasyX.delay(1300).duration(400)}>
                      <TouchableOpacity
                         style={[styles.button, styles.applyButton]}
-                        onPress={handleApplyFilters}>
+                        onPress={() => handleApplyFiltersAndFetchData(filterRef)}>
                         <Text style={styles.buttonText}>Apply</Text>
                      </TouchableOpacity>
                   </Animated.View>
@@ -170,14 +153,6 @@ const styles = StyleSheet.create({
       backgroundColor: theme.colors.backgroundMuted,
       paddingHorizontal: widthPercentage(4),
    },
-   // title: {
-   //    fontSize: theme.font.lg,
-   //    fontFamily: "Inter",
-   //    fontWeight: "700",
-   //    color: theme.colors.secondary,
-   //    marginBottom: 10,
-   //    marginTop: 10,
-   // },
    subTitle: {
       fontSize: theme.font.sm,
       fontFamily: "Inter",

@@ -23,3 +23,14 @@ export type PixabayImage = {
    user: string;
    userImageURL: string;
 };
+
+export type FetchParamType = {
+   category?: string;
+   searchQuery?: string;
+   append?: boolean;
+   page?: number;
+   orientation?: "all" | "horizontal" | "vertical";
+   image_type?: "all" | "photo" | "illustration" | "vector";
+   colors?: string;
+   order?: "popular" | "latest";
+};
