@@ -33,10 +33,10 @@ export const useFilterStore = create<State & Action>((set, get) => {
          }));
       },
       handleClearFiltersAndFetchData: (modalRef: React.RefObject<BottomSheetModal>) => {
-         const { filters, category, setFilters } = get(); // getting the local state
+         const { filters, category } = get(); // getting the local state
          if (Object.keys(filters).length > 0) {
             setImages([]);
-            setFilters({});
+            set((state) => ({ ...state, filters: {} }));
             fetchData({
                page: 1,
                searchQuery: searchQuery,
@@ -50,10 +50,9 @@ export const useFilterStore = create<State & Action>((set, get) => {
       handleApplyFiltersAndFetchData: (modalRef: React.RefObject<BottomSheetModal>) => {
          const { filters, category } = get();
          if (Object.keys(filters).length > 0) {
-            const page = 1; // Assuming page is declared somewhere accessible
-            setImages([]); // Use setImages from the other Zustand store
+            setImages([]);
             fetchData({
-               page: page,
+               page: 1,
                searchQuery: searchQuery,
                append: false,
                category: category !== null ? category : "",

@@ -4,15 +4,19 @@ import { create } from "zustand";
 
 type State = {
    images: PixabayImage[];
+   page: number;
 };
 
 type Action = {
    setImages: (images: PixabayImage[], append?: boolean) => void;
    fetchData: (params: FetchParamType) => void;
+   changePageNumber: () => void;
+   resetPageNumber: () => void;
 };
 
 export const useDataStore = create<State & Action>((set) => ({
    images: [],
+   page: 1,
    setImages: (images, append = false) => {
       set((state) => ({
          images: append ? [...state.images, ...images] : images,
@@ -29,4 +33,6 @@ export const useDataStore = create<State & Action>((set) => ({
          }
       }
    },
+   changePageNumber: () => set((state) => ({ ...state, page: state.page + 1 })),
+   resetPageNumber: () => set((state) => ({ ...state, page: 1 })),
 }));

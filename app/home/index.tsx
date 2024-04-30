@@ -24,11 +24,12 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { styles } from "./home.styles";
 
-let page = 1;
 const HomeScreen = () => {
    const { searchQuery, updateSearchQuery, clearSearchQuery } = useSearchStore((state) => state);
    const { filters, setCategory, category } = useFilterStore((state) => state);
-   const { fetchData, setImages, images } = useDataStore((state) => state);
+   const { fetchData, setImages, images, changePageNumber, resetPageNumber, page } = useDataStore(
+      (state) => state
+   );
    const debouncedValue = useDebounce(searchQuery, 600);
    const scrollRef = useRef<ScrollView | null>(null);
    const bottomSheetModalRef = useRef<BottomSheetModal>(null);
@@ -51,9 +52,9 @@ const HomeScreen = () => {
       if (scrollOffset >= bottomPosition) {
          if (!isEndReached) {
             setIsEndReached(true);
-            ++page;
+            changePageNumber();
             fetchData({
-               page: page,
+               page: page + 1,
                searchQuery: debouncedValue,
                append: true,
                category: category !== null ? category : "",
@@ -74,6 +75,10 @@ const HomeScreen = () => {
          append: false,
       });
    }, [debouncedValue]);
+
+   useEffect(() => {
+      resetPageNumber();
+   }, [category, filters]);
 
    const { top } = useSafeAreaInsets();
    const paddingTop = top > 0 ? top + 20 : 0;
