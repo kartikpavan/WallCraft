@@ -26,8 +26,8 @@ https://github.com/kartikpavan/WallCraft/assets/81632171/0a311b46-7701-4807-8755
 
 - React Native
 - Expo file system
-- Expo router
-- Expo blur
+- Expo route
+- Zustand (State Management)
 - Gorhom bottom sheet
 - Shopify flashlist
 - React Native Reanimated
