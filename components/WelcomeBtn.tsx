@@ -15,7 +15,8 @@ const WelcomeBtn: React.FC<ButtonProps> = ({ onPress, title }) => {
             colors={["#b387fa", "#89e0eb"]}
             style={styles.button}
             start={{ x: 0, y: 0 }}
-            end={{ x: 1, y: 0 }}>
+            end={{ x: 1, y: 0 }}
+         >
             <Text style={styles.text}>{title}</Text>
          </LinearGradient>
       </TouchableOpacity>

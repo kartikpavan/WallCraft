@@ -23,7 +23,6 @@ export const useDataStore = create<State & Action>((set) => ({
       }));
    },
    fetchData: async (params) => {
-      console.log(params);
       const response = await fetchImages(params);
       if (response?.success && response?.data.hits) {
          if (params.append) {
